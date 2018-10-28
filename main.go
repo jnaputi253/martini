@@ -1,14 +1,25 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
+	"martini/database"
 	"martini/models"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	dbConfig, err := database.InitWithDefaultConfigs()
+
+	if err != nil {
+		log.Fatalf("%s\n", err)
+	}
+
+	fmt.Println(dbConfig)
+
 	router := gin.Default()
 
 	v1 := router.Group("/v1")
