@@ -15,14 +15,14 @@ type DbConfig struct {
 }
 
 func InitWithDefaultConfigs() (*DbConfig, error) {
-	jsonParser, err := getJsonParser(defaultConfigPath)
+	decoder, err := getDecoder(defaultConfigPath)
 
 	if err != nil {
 		return nil, err
 	}
 
 	var dbConfig *DbConfig
-	if err = jsonParser.Decode(&dbConfig); err != nil {
+	if err = decoder.Decode(&dbConfig); err != nil {
 		return nil, err
 	}
 
@@ -34,14 +34,14 @@ func InitWithDefaultConfigs() (*DbConfig, error) {
 	return dbConfig, nil
 }
 
-func getJsonParser(path string) (*json.Decoder, error) {
+func getDecoder(path string) (*json.Decoder, error) {
 	jsonFile, err := os.Open(path)
 
 	if err != nil {
 		return nil, err
 	}
 
-	jsonParser := json.NewDecoder(jsonFile)
+	decoder := json.NewDecoder(jsonFile)
 
-	return jsonParser, nil
+	return decoder, nil
 }
