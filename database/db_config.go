@@ -2,7 +2,6 @@ package database
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 )
 
@@ -16,22 +15,20 @@ type DbConfig struct {
 
 func InitWithDefaultConfigs() (*DbConfig, error) {
 	decoder, err := getDecoder(defaultConfigPath)
-
 	if err != nil {
 		return nil, err
 	}
 
-	var dbConfig *DbConfig
-	if err = decoder.Decode(&dbConfig); err != nil {
+	return createDbConfig(decoder)
+}
+
+func InitWithConfigPath(path string) (*DbConfig, error) {
+	decoder, err := getDecoder(path)
+	if err != nil {
 		return nil, err
 	}
 
-	fmt.Printf("DB Vendor: %s\nUsername: %s\nPassword: %s\n",
-		dbConfig.DbVendor,
-		dbConfig.Username,
-		dbConfig.Password)
-
-	return dbConfig, nil
+	return createDbConfig(decoder)
 }
 
 func getDecoder(path string) (*json.Decoder, error) {
@@ -44,4 +41,13 @@ func getDecoder(path string) (*json.Decoder, error) {
 	decoder := json.NewDecoder(jsonFile)
 
 	return decoder, nil
+}
+
+func createDbConfig(decoder *json.Decoder) (*DbConfig, error) {
+	var dbConfig *DbConfig
+	if err := decoder.Decode(&dbConfig); err != nil {
+		return nil, err
+	}
+
+	return dbConfig, nil
 }
